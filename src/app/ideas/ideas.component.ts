@@ -66,7 +66,7 @@ export class IdeasComponent {
     this.selectedTheme = theme;
     this.selectedSetting = setting;
 
-    const apiKey = environment.apiKey;
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
     const imageApiUrl = 'https://api.openai.com/v1/images/generations';
     const headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', `Bearer ${apiKey}`);
