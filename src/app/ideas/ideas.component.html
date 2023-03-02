@@ -7,33 +7,33 @@
 
     <mat-menu #genre="matMenu">
         <div *ngFor="let genre of genres">
-        <button mat-menu-item [matMenuTriggerFor]="theme" (click)="selectedGenre = genre">
-            {{genre}}
-        </button>
+            <button mat-menu-item [matMenuTriggerFor]="theme" (click)="selectGenre(genre)" >
+                {{genre}}
+            </button>
         </div>
     </mat-menu>
-    
+
     <mat-menu #theme="matMenu">
         <div *ngFor="let theme of themes">
-        <button mat-menu-item [matMenuTriggerFor]="setting" (click)="selectedTheme = theme">
-            {{theme}}
-        </button>
+            <button mat-menu-item [matMenuTriggerFor]="setting" (click)="selectTheme(theme)" [disabled]="!genreSelected">
+                {{theme}}
+            </button>
         </div>
     </mat-menu>
 
     <mat-menu #setting="matMenu">
         <div *ngFor="let setting of settings">
-        <button mat-menu-item (click)="generateIdeas(selectedGenre, selectedTheme, setting)">
-            {{setting}}
-        </button>
+            <button mat-menu-item (click)="generateIdeas(selectedGenre, selectedTheme, setting)" [disabled]="!themeSelected">
+                {{setting}}
+            </button>
         </div>
     </mat-menu>
     
     
     <p *ngIf="selectedSetting">
-        Selected genre: {{selectedGenre}}
-        Selected theme: {{selectedTheme}}
-        Selected setting: {{selectedSetting}}
+        Genre: {{selectedGenre}}
+        Theme: {{selectedTheme}}
+        Setting: {{selectedSetting}}
     </p>
     
 
