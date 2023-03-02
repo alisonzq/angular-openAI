@@ -1,3 +1,5 @@
+https://ideaai-72e9a.web.app
+
 # ChatAI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
