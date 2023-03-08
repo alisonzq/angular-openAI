@@ -8,6 +8,11 @@ interface Ideas {
   image: string;
 }
 
+interface ChatIdeas {
+  setting: string[];
+  story: string[];
+}
+
 @Component({
   selector: 'app-ideas',
   templateUrl: './ideas.component.html',
@@ -26,6 +31,11 @@ export class IdeasComponent {
     setting: [],
     story: [],
     image: '',
+  };
+
+  chatideas: ChatIdeas = {
+    setting: [],
+    story: [],
   };
 
   themes = [
@@ -73,11 +83,13 @@ export class IdeasComponent {
 
     const apiKey = environment.apiKey;
     const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+    const chatUrl = 'https://api.openai.com/v1/chat/completions';
     const imageApiUrl = 'https://api.openai.com/v1/images/generations';
     const headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', `Bearer ${apiKey}`);
 
     const storyPrompt = `Write a ${this.selectedGenre.toLowerCase()} video game story set in a ${this.selectedSetting.toLowerCase()} with this environmental issue as a theme:${this.selectedTheme.toLowerCase()}`
     this.generateIdea(apiUrl, headers, `${storyPrompt}`, 3, 'story',256);
+    this.generateChatIdea(chatUrl, headers, `${storyPrompt}`, 'story');
 
     // Generate an image based on the prompts
     this.generateImage(imageApiUrl, headers, `${storyPrompt}`);
@@ -93,6 +105,17 @@ export class IdeasComponent {
       this.themeSelected = true;
   }
 
+  generateChatIdea(apiUrl: string, headers: HttpHeaders, prompt: string, element: string) {
+    const requestBody = {
+      model: "gpt-3.5-turbo",
+      messages: [{"role": "user", "content": prompt}],
+      temperature: 0.7,
+    };
+    this.http.post<any>(apiUrl, requestBody, { headers }).subscribe(response => {
+    
+      this.chatideas[element as keyof ChatIdeas] =  [response.choices[0].message.content];
+    });
+  }
 
 
   generateIdea(apiUrl: string, headers: HttpHeaders, prompt: string, numIdeas: number, element: string, maxTokens: number) {
@@ -105,7 +128,6 @@ export class IdeasComponent {
     };
     this.http.post<any>(apiUrl, requestBody, { headers }).subscribe(response => {
       let ideas = response.choices.map((choice: { text: string; }) => choice.text.trim());
-
 
       // Filter out any names
       if (element === 'name') {
